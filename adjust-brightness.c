@@ -13,7 +13,6 @@ int set_brightness(struct udev_device *dev, char *brightness)
 
 int main(int argc, const char *argv[])
 {
-
 	struct udev_list_entry *devices, *dev_list_entry;
 	struct udev_enumerate *enumerate;
 	bool should_turn_off = false;
@@ -56,6 +55,7 @@ int main(int argc, const char *argv[])
 			break;
 		}
 
+		printf("supported actions + and -\n");
 		char c;
 		do {
 			do {
@@ -71,10 +71,8 @@ int main(int argc, const char *argv[])
 				current_brightness++;
 			else if (c == '-')
 				current_brightness--;
-			else {
-				printf("unsupported \(%c)\n", c);
+			else
 				break;
-			}
 
 			char new_brightness[1024];
 			sprintf(new_brightness, "%d", current_brightness);
