@@ -4,12 +4,19 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdbool.h>
+
+int set_brightness(struct udev_device *dev, char *brightness)
+{
+	return udev_device_set_sysattr_value(dev, "brightness", brightness);
+}
 
 int main(int argc, const char *argv[])
 {
 
 	struct udev_list_entry *devices, *dev_list_entry;
 	struct udev_enumerate *enumerate;
+	bool should_turn_off = false;
 	struct udev_device *dev;
 	struct udev *udev;
 
@@ -17,6 +24,11 @@ int main(int argc, const char *argv[])
 	if (!udev) {
 		perror("udev_new");
 		return EXIT_FAILURE;
+	}
+
+	if (argc > 1) {
+		if (!strcmp(argv[1], "off"))
+			should_turn_off = true;
 	}
 
 	enumerate = udev_enumerate_new(udev);
@@ -38,6 +50,11 @@ int main(int argc, const char *argv[])
 		printf("syspath=%s\n", udev_device_get_syspath(dev));
 		printf("actual_brightness: %s\n", actual_brightness);
 		printf("max_brightness: %s\n", max_brightness);
+
+		if (should_turn_off) {
+			set_brightness(dev, "0");
+			break;
+		}
 
 		char c;
 		do {
@@ -69,8 +86,7 @@ int main(int argc, const char *argv[])
 				break;
 			}
 
-			if (0 > udev_device_set_sysattr_value(dev, "brightness",
-							      new_brightness)) {
+			if (0 > set_brightness(dev, new_brightness)) {
 				perror("udev_device_set_sysattr_value");
 			}
 		} while (c != 'q');
