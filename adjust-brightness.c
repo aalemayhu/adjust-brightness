@@ -25,10 +25,8 @@ int main(int argc, const char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	if (argc > 1) {
-		if (!strcmp(argv[1], "off"))
-			should_turn_off = true;
-	}
+	if (argc > 1)
+		should_turn_off = !strcmp(argv[1], "off");
 
 	enumerate = udev_enumerate_new(udev);
 
