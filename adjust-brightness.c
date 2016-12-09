@@ -49,7 +49,8 @@ int main(int argc, const char *argv[])
 		printf("max_brightness: %s\n", max_brightness);
 
 		if (should_turn_off) {
-			set_brightness(dev, "0");
+			if (0 > set_brightness(dev, "0"))
+				perror("set_brightness");
 			break;
 		}
 
@@ -82,9 +83,8 @@ int main(int argc, const char *argv[])
 				break;
 			}
 
-			if (0 > set_brightness(dev, new_brightness)) {
-				perror("udev_device_set_sysattr_value");
-			}
+			if (0 > set_brightness(dev, new_brightness))
+				perror("set_brightness");
 		} while (c != 'q');
 	}
 
