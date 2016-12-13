@@ -6,9 +6,9 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-int set_brightness(struct udev_device *dev, char *brightness)
+int set_brightness(struct udev_device *dev, char *value)
 {
-	return udev_device_set_sysattr_value(dev, "brightness", brightness);
+	return udev_device_set_sysattr_value(dev, "brightness", value);
 }
 
 int main(int argc, const char *argv[])
